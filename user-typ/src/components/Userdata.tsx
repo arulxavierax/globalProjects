@@ -1,0 +1,33 @@
+import { Box, Image, SimpleGrid, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+
+function Userdata({ data }: any) {
+  return (
+    <Box p={5}>
+      <SimpleGrid columns={[1, 2, 4]} spacing={10}>
+        {data?.map((e: any) => (
+          <Box key={e.id} border={"1px solid black"} borderRadius={10} p={5}>
+            <Link to={`/user/${e.id}`}>
+              <Image
+                width={"50%"}
+                margin={"auto"}
+                src="https://th.bing.com/th?id=OIP.Cl56H6WgxJ8npVqyhefTdQHaHa&w=249&h=249&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2"
+              />
+              <Text textAlign={"center"}>Name : {e.name}</Text>
+              <Text textAlign={"center"}>Designation : {e.designation}</Text>
+              <Text textAlign={"center"}>Department : {e.department}</Text>
+              <Text textAlign={"center"}>Email : {e.email}</Text>
+              <Text textAlign={"center"}>Dob : {e.dob}</Text>
+              <Text textAlign={"center"}>Gender : {e.gender}</Text>
+              <Text textAlign={"center"}>Phone : {e.phone}</Text>
+              <Text textAlign={"center"}>Language : {e.language}</Text>
+              <Text textAlign={"center"}>City : {e.city}</Text>
+            </Link>
+          </Box>
+        ))}
+      </SimpleGrid>
+    </Box>
+  );
+}
+
+export default Userdata;
