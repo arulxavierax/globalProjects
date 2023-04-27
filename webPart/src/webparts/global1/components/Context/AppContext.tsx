@@ -1,16 +1,16 @@
 import * as React from "react";
+import "@pnp/sp/webs";
+import "@pnp/sp/lists";
+import "@pnp/sp/items";
+import { sp } from "./Auth";
 
 type UserData = {
-  id: String;
+  id: string;
   city: String;
-  department: String;
-  dob: String;
   email: String;
   gender: String;
-  language: String;
   name: String;
   phone: String;
-  designation: string;
 };
 
 interface IContext {
@@ -18,15 +18,19 @@ interface IContext {
   setData: React.Dispatch<React.SetStateAction<UserData[]>>;
   users: UserData[];
 }
+
 export const ContextApp = React.createContext<IContext | null>(null);
 
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   let users = JSON.parse(localStorage.getItem("user") || "[]");
   const [data, setData] = React.useState<UserData[]>(users);
 
+  const getData = async () => {
+    const items: any[] = await sp.web.lists.getByTitle("user").items();
+    setData(items);
+  };
   React.useEffect(() => {
-    const items = sp.web.lists.getByTitle("user").items();
-    console.log(items);
+    getData();
   }, []);
 
   return (

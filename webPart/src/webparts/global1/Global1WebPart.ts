@@ -11,6 +11,7 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 import * as strings from 'Global1WebPartStrings';
 import Global1 from './components/Global1';
 import { IGlobal1Props } from './components/IGlobal1Props';
+import { spService } from './components/Context/Auth';
 
 export interface IGlobal1WebPartProps {
   description: string;
@@ -22,6 +23,7 @@ export default class Global1WebPart extends BaseClientSideWebPart<IGlobal1WebPar
   private _environmentMessage: string = '';
 
   public render(): void {
+    spService.setup(this.context)
     const element: React.ReactElement<IGlobal1Props> = React.createElement(
       Global1,
       {
@@ -37,6 +39,7 @@ export default class Global1WebPart extends BaseClientSideWebPart<IGlobal1WebPar
   }
 
   protected onInit(): Promise<void> {
+    spService.setup(this.context)
     return this._getEnvironmentMessage().then(message => {
       this._environmentMessage = message;
     });

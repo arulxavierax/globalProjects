@@ -1,33 +1,31 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { ContextApp } from "../Context/AppContext";
+// import { ContextApp } from "../Context/AppContext";
+import { sp } from "../Context/Auth";
 
 const initial = {
+  id: "",
+  Title: "",
   name: "",
   email: "",
-  dob: "",
   gender: "",
-  designation: "",
   phone: "",
   city: "",
-  department: "",
-  language: "",
-  id: "",
 };
 
+// const context = React.useContext(ContextApp);
 function AddUser() {
-  const context = React.useContext(ContextApp);
   const [form, setForm] = React.useState(initial);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name: key, value } = e.target;
-    setForm({ ...form, [key]: value, id: Date.now() + form.name });
+    setForm({ ...form, [key]: value, Title: "user" });
   };
 
-  const handleSubmit = () => {
-    context?.data.push(form);
-    localStorage.setItem("user", JSON.stringify(context?.data));
+  const handleSubmit = async () => {
+    // context?.data.push(form);
+    await sp.web.lists.getByTitle("user").items.add(form);
     setForm(initial);
     navigate("/");
   };
@@ -66,24 +64,14 @@ function AddUser() {
             onChange={handleChange}
             name="email"
           />
-          <input
-            placeholder="DOB"
-            value={form.dob}
-            onChange={handleChange}
-            name="dob"
-          />
+
           <input
             placeholder="Gender"
             value={form.gender}
             onChange={handleChange}
             name="gender"
           />
-          <input
-            placeholder="Designation"
-            value={form.designation}
-            onChange={handleChange}
-            name="designation"
-          />
+
           <input
             type="number"
             placeholder="Phone No"
@@ -97,18 +85,7 @@ function AddUser() {
             onChange={handleChange}
             name="city"
           />
-          <input
-            placeholder="Department"
-            value={form.department}
-            onChange={handleChange}
-            name="department"
-          />
-          <input
-            placeholder="Language"
-            value={form.language}
-            onChange={handleChange}
-            name="language"
-          />
+
           <div style={{ justifyContent: "space-between" }}>
             <button onClick={handleCancel}>Cancel</button>
             <button onClick={handleSubmit}>Save</button>

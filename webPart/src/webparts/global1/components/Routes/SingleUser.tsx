@@ -6,7 +6,7 @@ function SingleUser() {
   const { id } = useParams();
   const [singleUser, setSingleUser] = React.useState<UserData>();
   let context = React.useContext(ContextApp);
-  
+
   React.useEffect(() => {
     context?.data.filter((e) => (e.id === id ? setSingleUser(e) : ""));
   }, [id]);
@@ -23,13 +23,9 @@ function SingleUser() {
           src="https://th.bing.com/th?id=OIP.Cl56H6WgxJ8npVqyhefTdQHaHa&w=249&h=249&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2"
         />
         <p>Name : {singleUser?.name}</p>
-        <p>Department : {singleUser?.department}</p>
-        <p>Designation : {singleUser?.designation}</p>
         <p>Email : {singleUser?.email}</p>
-        <p>DOB : {singleUser?.dob}</p>
         <p>Gender : {singleUser?.gender}</p>
         <p>Phone No : {singleUser?.phone}</p>
-        <p>Language : {singleUser?.language}</p>
         <p>City : {singleUser?.city}</p>
       </div>
     </div>
