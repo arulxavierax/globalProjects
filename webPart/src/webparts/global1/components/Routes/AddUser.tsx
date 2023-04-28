@@ -2,9 +2,9 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 // import { ContextApp } from "../Context/AppContext";
 import { sp } from "../Context/Auth";
+import { getData } from "../Context/AppContext";
 
 const initial = {
-  id: "",
   Title: "",
   name: "",
   email: "",
@@ -24,9 +24,10 @@ function AddUser() {
   };
 
   const handleSubmit = async () => {
-    // context?.data.push(form);
+    console.log("first");
     await sp.web.lists.getByTitle("user").items.add(form);
     setForm(initial);
+    getData();
     navigate("/");
   };
 

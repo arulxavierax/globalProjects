@@ -1,15 +1,57 @@
 import * as React from "react";
-import { useParams } from "react-router-dom";
-import { ContextApp, UserData } from "../Context/AppContext";
+import { useNavigate, useParams } from "react-router-dom";
+import { UserData, getData } from "../Context/AppContext";
+import { sp } from "../Context/Auth";
+
+const initial = {
+  Title: "",
+  name: "",
+  email: "",
+  gender: "",
+  phone: "",
+  city: "",
+};
 
 function SingleUser() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [form, setForm] = React.useState(initial);
   const [singleUser, setSingleUser] = React.useState<UserData>();
-  let context = React.useContext(ContextApp);
+  const [isUpdate, setIsUpdate] = React.useState(false);
+
+  const getSingleUser = async () => {
+    let data = await sp.web.lists.getByTitle("user").items.getById(+id)();
+    setSingleUser(data);
+  };
 
   React.useEffect(() => {
-    context?.data.filter((e) => (e.id === id ? setSingleUser(e) : ""));
+    getSingleUser();
   }, [id]);
+
+  const handleDelete = async () => {
+    const list = sp.web.lists.getByTitle("user");
+    await list.items.getById(+id).delete();
+    getData();
+    navigate("/");
+  };
+
+  const handleUpdate = () => {
+    setIsUpdate(true);
+  };
+
+  const handleCancel = () => {
+    setIsUpdate(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name: key, value } = e.target;
+    setForm({ ...form, [key]: value, Title: "user" });
+  };
+
+  const handleSave = async () => {
+    const list = sp.web.lists.getByTitle("user");
+    await list.items.getById(+id).update(form);
+  };
 
   return (
     <div>
@@ -22,12 +64,62 @@ function SingleUser() {
           style={{ margin: "auto" }}
           src="https://th.bing.com/th?id=OIP.Cl56H6WgxJ8npVqyhefTdQHaHa&w=249&h=249&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2"
         />
-        <p>Name : {singleUser?.name}</p>
-        <p>Email : {singleUser?.email}</p>
-        <p>Gender : {singleUser?.gender}</p>
-        <p>Phone No : {singleUser?.phone}</p>
-        <p>City : {singleUser?.city}</p>
+        {!isUpdate ? (
+          <>
+            <p>Name : {singleUser?.name}</p>
+            <p>Email : {singleUser?.email}</p>
+            <p>Gender : {singleUser?.gender}</p>
+            <p>Phone No : {singleUser?.phone}</p>
+            <p>City : {singleUser?.city}</p>
+          </>
+        ) : (
+          <div>
+            <input
+              placeholder="Name"
+              value={form.name}
+              onChange={handleChange}
+              name="name"
+              required={true}
+            />
+            <input
+              placeholder="Email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              name="email"
+              required={true}
+            />
+            <input
+              placeholder="Gender"
+              value={form.gender}
+              onChange={handleChange}
+              name="gender"
+              required={true}
+            />
+            <input
+              placeholder="Phone No"
+              type="number"
+              value={form.phone}
+              onChange={handleChange}
+              name="phone"
+              required={true}
+            />
+            <input
+              placeholder="City"
+              value={form.city}
+              onChange={handleChange}
+              name="city"
+              required={true}
+            />
+          </div>
+        )}
       </div>
+      <button onClick={isUpdate ? handleCancel : handleDelete}>
+        {isUpdate ? "Cancel" : "Delete"}
+      </button>
+      <button onClick={isUpdate ? handleSave : handleUpdate}>
+        {isUpdate ? "Save" : "Update"}
+      </button>
     </div>
   );
 }

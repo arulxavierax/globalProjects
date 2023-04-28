@@ -5,7 +5,6 @@ import "@pnp/sp/items";
 import { sp } from "./Auth";
 
 type UserData = {
-  id: string;
   city: String;
   email: String;
   gender: String;
@@ -16,25 +15,30 @@ type UserData = {
 interface IContext {
   data: UserData[];
   setData: React.Dispatch<React.SetStateAction<UserData[]>>;
-  users: UserData[];
+  user: UserData[];
+  setUser: React.Dispatch<React.SetStateAction<UserData[]>>;
 }
 
 export const ContextApp = React.createContext<IContext | null>(null);
 
-const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
-  let users = JSON.parse(localStorage.getItem("user") || "[]");
-  const [data, setData] = React.useState<UserData[]>(users);
+export const getData = async () => {
+  const items: any[] = await sp.web.lists.getByTitle("user").items();
+  return items;
+};
 
-  const getData = async () => {
-    const items: any[] = await sp.web.lists.getByTitle("user").items();
-    setData(items);
-  };
+const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const [data, setData] = React.useState<UserData[]>();
+  const [user, setUser] = React.useState<UserData[]>();
+
   React.useEffect(() => {
-    getData();
-  }, []);
+    getData().then((res) => {
+      setData(res);
+      setUser(res);
+    });
+  }, [data, setData]);
 
   return (
-    <ContextApp.Provider value={{ data, setData, users }}>
+    <ContextApp.Provider value={{ data, setData, user, setUser }}>
       {children}
     </ContextApp.Provider>
   );
