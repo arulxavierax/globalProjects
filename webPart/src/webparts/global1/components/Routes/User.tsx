@@ -5,24 +5,30 @@ import { ContextApp } from "../Context/AppContext";
 
 function User() {
   let context = React.useContext(ContextApp);
+  const [searchData, setSearchData] = React.useState([]);
   const navigate = useNavigate();
   const handleClick = () => {
     navigate("/adduser");
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.target.value === ""
-      ? context?.setData(context.user)
-      : context?.setData(
-          context?.data.filter((user) =>
-            user.name.toLowerCase().includes(e.target.value.toLowerCase())
-          )
-        );
+    setSearchData(
+      context?.data.filter((user) =>
+        user.name.toLowerCase().includes(e.target.value.toLowerCase())
+      )
+    );
   };
 
   return (
-    <div>
+    <div
+      style={{
+        overflowX: "scroll",
+        overflowY: "scroll",
+        height: "100%",
+        backgroundColor: "white",
+      }}
+    >
       <div style={{ padding: 5, background: "grey" }}>
-        <p>User Managment</p>
+        <h3>User Managment</h3>
       </div>
       <div
         style={{
@@ -48,7 +54,7 @@ function User() {
           </button>
         </div>
       </div>
-      <UserData data={context?.data} />
+      <UserData data={searchData[0] ? searchData : context?.data} />
     </div>
   );
 }

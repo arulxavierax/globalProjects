@@ -1,21 +1,12 @@
 import * as React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserData, getData } from "../Context/AppContext";
 import { sp } from "../Context/Auth";
-
-const initial = {
-  Title: "",
-  name: "",
-  email: "",
-  gender: "",
-  phone: "",
-  city: "",
-};
+import SingleUserData from "./SingleUserData";
 
 function SingleUser() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [form, setForm] = React.useState(initial);
   const [singleUser, setSingleUser] = React.useState<UserData>();
   const [isUpdate, setIsUpdate] = React.useState(false);
 
@@ -45,81 +36,102 @@ function SingleUser() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name: key, value } = e.target;
-    setForm({ ...form, [key]: value, Title: "user" });
+    setSingleUser({ ...singleUser, [key]: value });
   };
 
   const handleSave = async () => {
     const list = sp.web.lists.getByTitle("user");
-    await list.items.getById(+id).update(form);
+    await list.items.getById(+id).update({
+      name: singleUser.name,
+      phone: singleUser.phone,
+      email: singleUser.email,
+      gender: singleUser.gender,
+      city: singleUser.city,
+    });
+    setIsUpdate(false);
+    getSingleUser();
   };
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "white",
+        height: "100%",
+      }}
+    >
       <div style={{ padding: 5, backgroundColor: "grey" }}>
-        <h3>User Managment</h3>
+        <h3>
+          <Link to="/">User Managment</Link>
+        </h3>
       </div>
-      <div style={{ padding: 5 }}>
+      <div
+        style={{
+          padding: 5,
+          marginLeft: "40%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <img
           width={"10%"}
           style={{ margin: "auto" }}
           src="https://th.bing.com/th?id=OIP.Cl56H6WgxJ8npVqyhefTdQHaHa&w=249&h=249&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2"
         />
         {!isUpdate ? (
-          <>
-            <p>Name : {singleUser?.name}</p>
-            <p>Email : {singleUser?.email}</p>
-            <p>Gender : {singleUser?.gender}</p>
-            <p>Phone No : {singleUser?.phone}</p>
-            <p>City : {singleUser?.city}</p>
-          </>
+          <SingleUserData {...singleUser} />
         ) : (
-          <div>
+          <div style={{ backgroundColor: "white" }}>
+            <p>Name :</p>
             <input
               placeholder="Name"
-              value={form.name}
+              value={singleUser.name}
               onChange={handleChange}
               name="name"
-              required={true}
+              required
             />
+            <p>Email :</p>
             <input
               placeholder="Email"
               type="email"
-              value={form.email}
+              value={singleUser.email}
               onChange={handleChange}
               name="email"
-              required={true}
+              required
             />
+            <p>Gender :</p>
             <input
               placeholder="Gender"
-              value={form.gender}
+              value={singleUser?.gender}
               onChange={handleChange}
               name="gender"
-              required={true}
+              required
             />
+            <p>Phone No:</p>
             <input
               placeholder="Phone No"
               type="number"
-              value={form.phone}
+              value={singleUser.phone}
               onChange={handleChange}
               name="phone"
-              required={true}
+              required
             />
+            <p>City :</p>
             <input
               placeholder="City"
-              value={form.city}
+              value={singleUser.city}
               onChange={handleChange}
               name="city"
-              required={true}
+              required
             />
           </div>
         )}
+        <button onClick={isUpdate ? handleCancel : handleDelete}>
+          {isUpdate ? "Cancel" : "Delete"}
+        </button>
+        <button onClick={isUpdate ? handleSave : handleUpdate}>
+          {isUpdate ? "Save" : "Update"}
+        </button>
       </div>
-      <button onClick={isUpdate ? handleCancel : handleDelete}>
-        {isUpdate ? "Cancel" : "Delete"}
-      </button>
-      <button onClick={isUpdate ? handleSave : handleUpdate}>
-        {isUpdate ? "Save" : "Update"}
-      </button>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import AllRoutes from "./Routes/AllRoutes";
 //import { escape } from "@microsoft/sp-lodash-subset";
 import { HashRouter } from "react-router-dom";
 import AppContextProvider from "./Context/AppContext";
+import { Layout } from "./Routes/Layout";
 
 export default class Global1 extends React.Component<IGlobal1Props, {}> {
   public render(): React.ReactElement<IGlobal1Props> {
@@ -12,11 +13,13 @@ export default class Global1 extends React.Component<IGlobal1Props, {}> {
 
     return (
       <>
-        <HashRouter>
-          <AppContextProvider>
-            <AllRoutes />
-          </AppContextProvider>
-        </HashRouter>
+        <Layout>
+          <HashRouter>
+            <AppContextProvider>
+              <AllRoutes />
+            </AppContextProvider>
+          </HashRouter>
+        </Layout>
       </>
     );
   }

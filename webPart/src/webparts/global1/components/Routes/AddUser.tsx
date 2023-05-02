@@ -36,7 +36,7 @@ function AddUser() {
   };
 
   return (
-    <div>
+    <div style={{ backgroundColor: "white", height: "100%" }}>
       <div style={{ padding: 5, backgroundColor: "grey" }}>
         <p>User Managment</p>
       </div>
@@ -46,7 +46,7 @@ function AddUser() {
         <div style={{ width: "40%" }}>
           <img
             style={{ margin: "auto" }}
-            width={"50%"}
+            width={"20%"}
             src="https://th.bing.com/th?id=OIP.Cl56H6WgxJ8npVqyhefTdQHaHa&w=249&h=249&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2"
           />
           <input

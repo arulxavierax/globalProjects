@@ -1,14 +1,20 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import "./style.css";
 
 function UserData({ data }: any) {
   return (
     <div style={{ padding: 5 }}>
-      <div>
+      <div className="girdContainer">
         {data?.map((e: any) => (
           <div
             key={e.id}
-            style={{ border: "1px solid black", borderRadius: 10, padding: 5 }}
+            style={{
+              border: "1px solid black",
+              borderRadius: 10,
+              padding: 5,
+              marginTop: "5px",
+            }}
           >
             <Link to={`/user/${e.Id}`}>
               <img

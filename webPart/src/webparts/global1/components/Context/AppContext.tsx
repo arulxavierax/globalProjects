@@ -5,18 +5,16 @@ import "@pnp/sp/items";
 import { sp } from "./Auth";
 
 type UserData = {
-  city: String;
-  email: String;
-  gender: String;
-  name: String;
-  phone: String;
+  city: string;
+  email: string;
+  gender: string;
+  name: string;
+  phone: string;
 };
 
 interface IContext {
   data: UserData[];
   setData: React.Dispatch<React.SetStateAction<UserData[]>>;
-  user: UserData[];
-  setUser: React.Dispatch<React.SetStateAction<UserData[]>>;
 }
 
 export const ContextApp = React.createContext<IContext | null>(null);
@@ -28,17 +26,15 @@ export const getData = async () => {
 
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [data, setData] = React.useState<UserData[]>();
-  const [user, setUser] = React.useState<UserData[]>();
 
   React.useEffect(() => {
     getData().then((res) => {
       setData(res);
-      setUser(res);
     });
-  }, [data, setData]);
+  }, [data]);
 
   return (
-    <ContextApp.Provider value={{ data, setData, user, setUser }}>
+    <ContextApp.Provider value={{ data, setData }}>
       {children}
     </ContextApp.Provider>
   );
