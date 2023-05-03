@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import { ContextApp } from "../Context/AppContext";
 import { sp } from "../Context/Auth";
 import { getData } from "../Context/AppContext";
@@ -25,10 +25,13 @@ function AddUser() {
 
   const handleSubmit = async () => {
     console.log("first");
-    await sp.web.lists.getByTitle("user").items.add(form);
+    const postData = await sp.web.lists.getByTitle("user").items.add(form);
     setForm(initial);
     getData();
-    navigate("/");
+    await sp.web
+      .getFolderByServerRelativePath("documentsLibrary")
+      .addSubFolderUsingPath(`${postData.data.Id}`);
+    navigate(`/user/${postData.data.Id}`);
   };
 
   const handleCancel = () => {
@@ -38,7 +41,9 @@ function AddUser() {
   return (
     <div style={{ backgroundColor: "white", height: "100%" }}>
       <div style={{ padding: 5, backgroundColor: "grey" }}>
-        <p>User Managment</p>
+        <h3>
+          <Link to="/">User Managment</Link>
+        </h3>
       </div>
       <div
         style={{ margin: 5, display: "flex", justifyContent: "space-between" }}

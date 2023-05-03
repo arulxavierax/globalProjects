@@ -9,6 +9,7 @@ function SingleUser() {
   const navigate = useNavigate();
   const [singleUser, setSingleUser] = React.useState<UserData>();
   const [isUpdate, setIsUpdate] = React.useState(false);
+  const [image, setImage] = React.useState<string | null>(null);
 
   const getSingleUser = async () => {
     let data = await sp.web.lists.getByTitle("user").items.getById(+id)();
@@ -52,6 +53,10 @@ function SingleUser() {
     getSingleUser();
   };
 
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImage(e);
+  };
+
   return (
     <div
       style={{
@@ -81,6 +86,7 @@ function SingleUser() {
           <SingleUserData {...singleUser} />
         ) : (
           <div style={{ backgroundColor: "white" }}>
+            <input type="file" onChange={handleFile} />
             <p>Name :</p>
             <input
               placeholder="Name"
