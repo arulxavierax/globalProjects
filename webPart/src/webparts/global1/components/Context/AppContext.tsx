@@ -10,6 +10,7 @@ type UserData = {
   gender: string;
   name: string;
   phone: string;
+  imageUrl: string;
 };
 
 interface IContext {

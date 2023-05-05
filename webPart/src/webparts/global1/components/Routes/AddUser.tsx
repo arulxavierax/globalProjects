@@ -39,7 +39,14 @@ function AddUser() {
   };
 
   return (
-    <div style={{ backgroundColor: "white", height: "100%" }}>
+    <div
+      style={{
+        backgroundColor: "white",
+        height: "100%",
+        overflowX: "scroll",
+        overflowY: "scroll",
+      }}
+    >
       <div style={{ padding: 5, backgroundColor: "grey" }}>
         <h3>
           <Link to="/">User Managment</Link>
