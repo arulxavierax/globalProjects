@@ -24,7 +24,6 @@ function AddUser() {
   };
 
   const handleSubmit = async () => {
-    console.log("first");
     const postData = await sp.web.lists.getByTitle("user").items.add(form);
     setForm(initial);
     getData();
