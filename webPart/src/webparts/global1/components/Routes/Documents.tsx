@@ -12,7 +12,6 @@ function Documents() {
     getsingleFolder();
   }, [id]);
 
-
   const getsingleFolder = async () => {
     let c = await sp.web
       .getFolderByServerRelativePath(`documentsLibrary/${id}`)
@@ -35,16 +34,17 @@ function Documents() {
 
   return (
     <div>
-      <div>
+      <div style={{ marginLeft: "20px" }}>
+        <h3>Upload Your Documents</h3>
         <input type="file" onChange={handleChange} />
         <button onClick={handleDocument}>Upload</button>
-      </div>
-      <div>
-        {folderData?.map((e) => (
-          <div>
-            <p>{e.Name}</p>
-          </div>
-        ))}
+        <div>
+          {folderData?.map((e) => (
+            <div>
+              <p>{e.Name}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,6 @@
 import * as React from "react";
-//import styles from "./Global1.module.scss";
 import { IGlobal1Props } from "./IGlobal1Props";
 import AllRoutes from "./Routes/AllRoutes";
-//import { escape } from "@microsoft/sp-lodash-subset";
 import { HashRouter } from "react-router-dom";
 import AppContextProvider from "./Context/AppContext";
 import { Layout } from "./Routes/Layout";
