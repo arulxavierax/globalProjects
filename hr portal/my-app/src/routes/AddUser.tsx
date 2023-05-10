@@ -33,10 +33,6 @@ function Adduser() {
     setForm(initial);
   };
 
-  const handleRadio = (e: any) => {
-    console.log(e.target.value);
-  };
-
   const handleSubmit = () => {
     console.log(form);
   };
@@ -81,9 +77,13 @@ function Adduser() {
       </Select>
       <Text>Gender :</Text>
       <RadioGroup>
-        <Stack direction="row" onChange={handleRadio}>
-          <Radio value="Male">Male</Radio>
-          <Radio value="Female">Female</Radio>
+        <Stack direction="row" onChange={handleChange}>
+          <Radio name="gender" value="Male">
+            Male
+          </Radio>
+          <Radio name="gender" value="Female">
+            Female
+          </Radio>
         </Stack>
       </RadioGroup>
       <Text>Phone No :</Text>

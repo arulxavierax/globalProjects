@@ -1,0 +1,33 @@
+import express, { Application, Request, Response } from "express";
+import { sp } from "@pnp/sp-commonjs";
+import { SPFetchClient } from "@pnp/nodejs-commonjs";
+require("@pnp/sp-commonjs/webs");
+require("@pnp/sp-commonjs/items");
+
+const SpfxConnection = () => {
+  sp.setup({
+    sp: {
+      fetchClientFactory: () =>
+        new SPFetchClient(
+          "https://2mxff3.sharepoint.com/sites/arul2",
+          "44cf17cf-7bae-4072-8f8a-917c2a5b5934",
+          "lBIYmdkRU5z6Tti+b9CkPFcc+RY44LuW4lHF7EaaapQ="
+        ),
+    },
+  });
+};
+
+SpfxConnection();
+
+const app: Application = express();
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("<h1>Hello World!</h1>");
+});
+
+app.listen(8080, () => {
+  console.log(`Listening to port ${8080}`);
+});
