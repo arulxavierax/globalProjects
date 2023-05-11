@@ -12,7 +12,7 @@ app.get("/", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/:id", async (req, res) => {
+app.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     let data = await sp.web.lists.getByTitle("user").items.getById(+id)();
@@ -29,7 +29,7 @@ app.post("/adduser", async (req: Request, res: Response) => {
     let response = await sp.web
       .getFolderByServerRelativePath("documentsLibrary")
       .addSubFolderUsingPath(`${postData.data.Id}`);
-    res.send({ postData, response });
+    res.send(postData);
   } catch (e) {
     res.send(e);
   }
@@ -64,6 +64,7 @@ app.patch("/update/:id", async (req: Request, res: Response) => {
 app.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
+    console.log('first')
     const list = sp.web.lists.getByTitle("user");
     await list.items.getById(+id).delete();
     res.send("User Deleted Succesfully");

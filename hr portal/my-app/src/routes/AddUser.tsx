@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, useState } from "react";
 import {
   Container,
   Box,
@@ -9,8 +9,12 @@ import {
   Radio,
   Select,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import "../App.css";
+import { store } from "../store/store";
+import { addUser } from "../store/users/users.action";
+import { useNavigate } from "react-router-dom";
 
 const initial = {
   Title: "",
@@ -22,19 +26,30 @@ const initial = {
 };
 
 function Adduser() {
+  const toast = useToast();
   const [form, setForm] = useState(initial);
+  const dispatchStore = store.dispatch as typeof store.dispatch | Dispatch<any>;
+  const navigate = useNavigate();
 
   const handleChange = (e: any) => {
     const { name: key, value } = e.target;
     setForm({ ...form, [key]: value, Title: "user" });
   };
 
-  const handleCancel = () => {
-    setForm(initial);
+  const handleSubmit = () => {
+    dispatchStore(addUser(form)).then((res: any) => {
+      toast({
+        title: "Account created.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      navigate(`/user/${res.Id}`);
+    });
   };
 
-  const handleSubmit = () => {
-    console.log(form);
+  const handleCancel = () => {
+    setForm(initial);
   };
 
   return (

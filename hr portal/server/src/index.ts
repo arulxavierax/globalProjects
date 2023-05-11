@@ -5,6 +5,7 @@ require("@pnp/sp-commonjs/webs");
 require("@pnp/sp-commonjs/items");
 const usersRoute = require("./routes/users.routes");
 const documentRoute = require("./routes/document.routes");
+const cors = require("cors");
 
 const SpfxConnection = () => {
   sp.setup({
@@ -22,7 +23,7 @@ const SpfxConnection = () => {
 SpfxConnection();
 
 const app: Application = express();
-
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/users", usersRoute);
