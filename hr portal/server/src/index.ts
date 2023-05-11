@@ -3,6 +3,8 @@ import { sp } from "@pnp/sp-commonjs";
 import { SPFetchClient } from "@pnp/nodejs-commonjs";
 require("@pnp/sp-commonjs/webs");
 require("@pnp/sp-commonjs/items");
+const usersRoute = require("./routes/users.routes");
+const documentRoute = require("./routes/document.routes");
 
 const SpfxConnection = () => {
   sp.setup({
@@ -23,6 +25,8 @@ const app: Application = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use("/users", usersRoute);
+app.use("/doc", documentRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("<h1>Hello World!</h1>");
