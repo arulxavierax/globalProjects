@@ -31,15 +31,9 @@ app.post(
   "/:id",
   upload.single("document"),
   async (req: Request, res: Response) => {
-    const data = req.body;
+    const data = req.body
     const { id } = req.params;
     res.send(data);
-    // const data = req.body;
-    // try {
-    //   res.send(data);
-    // } catch (error) {
-    //   res.status(400).send("Something went wrong");
-    // }
   }
 );
 
