@@ -2,7 +2,6 @@ import {
   Box,
   Card,
   CardBody,
-  CardFooter,
   Center,
   Container,
   Heading,
@@ -13,18 +12,17 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import React, { ChangeEvent, Dispatch, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "../store/users/users.action";
+import  { ChangeEvent, Dispatch, useEffect, useState } from "react";
+import {  useSelector } from "react-redux";
+import { getUsers, searchUsersData } from "../store/users/users.action";
 import { RootState, store } from "../store/store";
 import { Link } from "react-router-dom";
 import "../App.css";
 
 function Users() {
-  const { data, error, loading } = useSelector(
+  const { data, searchData, error, loading } = useSelector(
     (store: RootState) => store.users
   );
-  const [search, setSearch] = useState(data);
   const dispatchStore = store.dispatch as typeof store.dispatch | Dispatch<any>;
 
   useEffect(() => {
@@ -32,13 +30,7 @@ function Users() {
   }, []);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    e.target.value !== ""
-      ? setSearch(data)
-      : setSearch(
-          data?.filter((user: any) =>
-            user.name.toLowerCase().includes(e.target.value.toLowerCase())
-          )
-        );
+    dispatchStore(searchUsersData(e.target.value, data));
   };
   if (loading) {
     return (
@@ -61,7 +53,7 @@ function Users() {
       </Container>
       <Box>
         <SimpleGrid mt={5} columns={[1, 2, 4]} spacing={5}>
-          {search?.map((e: any) => (
+          {searchData?.map((e: any) => (
             <Link key={e.Id} to={`/user/${e.Id}`}>
               <Card maxW="sm">
                 <CardBody>

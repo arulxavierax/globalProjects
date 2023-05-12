@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+  GET_SEARCHUSERS_SUCCESS,
   GET_USERS_ERROR,
   GET_USERS_LOADING,
   GET_USERS_SUCCESS,
@@ -32,4 +33,14 @@ export const addUser = (form: User) => async (dispatch: any) => {
   } catch (e) {
     console.log(e);
   }
+};
+
+export const searchUsersData = (key: string, data: any) => (dispatch: any) => {
+  if (key === "") dispatch({ type: GET_SEARCHUSERS_SUCCESS, payload: data });
+  dispatch({
+    type: GET_SEARCHUSERS_SUCCESS,
+    payload: data?.filter((user: any) =>
+      user.name.toLowerCase().includes(key.toLowerCase())
+    ),
+  });
 };

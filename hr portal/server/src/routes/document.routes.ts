@@ -1,5 +1,17 @@
 import { sp } from "@pnp/sp-commonjs";
 import express, { Request, Response } from "express";
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req: Request, file: any, cb: Function) => {
+    cb(null, `${__dirname}/../../uploads`);
+  },
+  filename: (req: Request, file: any, cb: Function) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const app = express.Router();
 
@@ -14,5 +26,21 @@ app.get("/:id", async (req: Request, res: Response) => {
     res.status(400).send(e);
   }
 });
+
+app.post(
+  "/:id",
+  upload.single("document"),
+  async (req: Request, res: Response) => {
+    const data = req.body;
+    const { id } = req.params;
+    res.send(data);
+    // const data = req.body;
+    // try {
+    //   res.send(data);
+    // } catch (error) {
+    //   res.status(400).send("Something went wrong");
+    // }
+  }
+);
 
 module.exports = app;
