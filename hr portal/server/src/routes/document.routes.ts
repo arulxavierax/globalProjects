@@ -1,6 +1,7 @@
 import { sp } from "@pnp/sp-commonjs";
 import express, { Request, Response } from "express";
 const multer = require("multer");
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req: Request, file: any, cb: Function) => {
@@ -31,9 +32,20 @@ app.post(
   "/:id",
   upload.single("document"),
   async (req: Request, res: Response) => {
-    const data = req.body
+    const data = fs.readFileSync((req as any).file.path);
     const { id } = req.params;
-    res.send(data);
+    if (data) {
+      try {
+        await sp.web
+          .getFolderByServerRelativePath(`documentsLibrary/${id}`)
+          .files.addUsingPath((req as any).file.originalname, data, {
+            Overwrite: true,
+          });
+        res.send("Document uploaded");
+      } catch (error) {
+        res.status(400).send(error);
+      }
+    }
   }
 );
 

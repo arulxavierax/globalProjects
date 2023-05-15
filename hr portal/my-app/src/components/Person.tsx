@@ -11,6 +11,13 @@ import {
   Heading,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Radio,
   RadioGroup,
   Select,
@@ -42,6 +49,7 @@ const initial = {
 
 function Person() {
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [form, setForm] = useState(initial);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -82,6 +90,7 @@ function Person() {
         isClosable: true,
       });
     });
+    onClose();
     navigate("/");
   };
 
@@ -174,12 +183,35 @@ function Person() {
       <Divider />
       <CardFooter>
         <ButtonGroup spacing="2">
-          <Button
-            onClick={isUpdate ? handleCancel : handleDelete}
-            variant="solid"
-            colorScheme="red"
-          >
-            {isUpdate ? "Cancel" : "Delete"}
+          <Button onClick={isUpdate ? handleCancel : onOpen}>
+            {isUpdate ? (
+              "Cancel"
+            ) : (
+              <>
+                <Button variant="ghost" colorScheme="red">
+                  Delete
+                </Button>
+                <Modal isOpen={isOpen} onClose={onClose}>
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>User Delete</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>Are you sure ?</ModalBody>
+
+                    <ModalFooter>
+                      <Button onClick={onClose}>Close</Button>
+                      <Button
+                        onClick={handleDelete}
+                        colorScheme="red"
+                        mr={3}
+                      >
+                        Delete
+                      </Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
+              </>
+            )}
           </Button>
           <Button
             onClick={isUpdate ? handleSave : handleUpdate}

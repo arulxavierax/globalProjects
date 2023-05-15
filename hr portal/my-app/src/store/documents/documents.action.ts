@@ -4,7 +4,9 @@ import {
   GET_DOCUMENTS_LOADING,
   GET_DOCUMENTS_SUCCESS,
 } from "./documents.types";
-import { RootState } from "../store";
+import { RootState, store } from "../store";
+import { Dispatch } from "react";
+const dispatchStore = store.dispatch as typeof store.dispatch | Dispatch<any>;
 
 export const getDocuments = (id: any) => async (dispatch: any) => {
   dispatch({ type: GET_DOCUMENTS_LOADING });
@@ -25,7 +27,8 @@ export const uploadDocument =
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res);
+      dispatchStore(getDocuments(id));
+      return res.data;
     } catch (error) {
       console.log(error);
     }

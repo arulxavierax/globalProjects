@@ -11,8 +11,9 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
-import React, { Dispatch, useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { RootState, store } from "../store/store";
 import {
   getDocuments,
@@ -24,6 +25,7 @@ import "../App.css";
 import { DownloadIcon } from "@chakra-ui/icons";
 
 function Documents() {
+  const toast = useToast();
   const { id } = useParams();
   const [isDoc, setIsDoc] = useState<any>("");
   const fileNamePath = encodeURI(isDoc.name);
@@ -58,7 +60,14 @@ function Documents() {
   };
 
   const handleFile = () => {
-    dispatchStore(uploadDocument(id, formdata));
+    dispatchStore(uploadDocument(id, formdata)).then((res: any) => {
+      toast({
+        title: "Document Uploaded.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    });
   };
 
   const handleDownload = () => {};
@@ -66,7 +75,12 @@ function Documents() {
   return (
     <Box>
       <Container>
-        <form encType="multipart/form-data">
+        <form
+          name="uploader"
+          action="/fileupload"
+          method="post"
+          encType="multipart/form-data"
+        >
           <Input type="file" name="document" onChange={handleChange} />
           <Button onClick={handleFile}>Submit</Button>
         </form>
