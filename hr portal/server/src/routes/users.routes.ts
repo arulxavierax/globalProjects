@@ -1,5 +1,18 @@
 import { sp } from "@pnp/sp-commonjs";
 import express, { Request, Response } from "express";
+const multer = require("multer");
+const fs = require("fs");
+
+const storage = multer.diskStorage({
+  destination: (req: Request, file: any, cb: Function) => {
+    cb(null, `${__dirname}/../../uploads`);
+  },
+  filename: (req: Request, file: any, cb: Function) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const app = express.Router();
 
@@ -35,36 +48,43 @@ app.post("/adduser", async (req: Request, res: Response) => {
   }
 });
 
-app.patch("/update/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { name, phone, email, gender, city } = req.body;
-  try {
-    const list = sp.web.lists.getByTitle("user");
-    await list.items.getById(+id).update({
-      name,
-      phone,
-      email,
-      gender,
-      city,
-    });
-    // if (image !== "") {
-    //   let c = await sp.web
-    //     .getFolderByServerRelativePath(`documentsLibrary/${id}`)
-    //     .files.addUsingPath(fileNamePath, image, { Overwrite: true });
-    //   await list.items.getById(+id).update({
-    //     imageUrl: c.data.ServerRelativeUrl,
-    //   });
-    // }
-    res.send("User Updated Succesfully");
-  } catch (e) {
-    res.send(e);
+app.patch(
+  "/update/:id",
+  upload.single("photo"),
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const photoData = fs.readFileSync((req as any).file?.path);
+    const data = req.body.data;
+    try {
+      const list = sp.web.lists.getByTitle("user");
+      await list.items.getById(+id).update({
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+        gender: data.gender,
+        city: data.city,
+      });
+      if ((req as any).file !== undefined) {
+        let c = await sp.web
+          .getFolderByServerRelativePath(`documentsLibrary/${id}`)
+          .files.addUsingPath((req as any).file.originalname, photoData, {
+            Overwrite: true,
+          });
+        await list.items.getById(+id).update({
+          imageUrl: c.data.ServerRelativeUrl,
+        });
+      }
+      res.send("Profile Updated");
+    } catch (error) {
+      res.status(400).send(error);
+    }
   }
-});
+);
 
 app.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    console.log('first')
+    console.log("first");
     const list = sp.web.lists.getByTitle("user");
     await list.items.getById(+id).delete();
     res.send("User Deleted Succesfully");

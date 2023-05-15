@@ -3,12 +3,10 @@ import {
   Button,
   ButtonGroup,
   Card,
-  CardBody,
   CardFooter,
   Center,
   Container,
   Divider,
-  Heading,
   Image,
   Input,
   Modal,
@@ -31,12 +29,22 @@ import "../App.css";
 import { Dispatch, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PersonCardbody from "./PersonCardbody";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState, store } from "../store/store";
 import {
   deleteUser,
   getSingleUsers,
+  updateSingleUser,
 } from "../store/singleUser/singleUser.action";
+
+type User = {
+  city: string;
+  email: string;
+  gender: string;
+  name: string;
+  phone: string;
+  Title: string;
+};
 
 const initial = {
   Title: "",
@@ -50,18 +58,23 @@ const initial = {
 function Person() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [form, setForm] = useState(initial);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  const [isPic, setIsPic] = useState<any>("");
   const navigate = useNavigate();
   const { id } = useParams();
   const { data, error, loading } = useSelector(
     (store: RootState) => store.singleUser
   );
+  const [form, setForm] = useState<any>(initial);
   const dispatchStore = store.dispatch as typeof store.dispatch | Dispatch<any>;
 
+  const formdata = new FormData();
+  formdata.append("photo", isPic);
+
   useEffect(() => {
-    dispatchStore(getSingleUsers(id));
-    // setForm(data);
+    dispatchStore(getSingleUsers(id)).then((res: any) => {
+      setForm(res);
+    });
   }, [id]);
 
   if (loading) {
@@ -96,7 +109,15 @@ function Person() {
 
   const handleChange = (e: any) => {
     const { name: key, value } = e.target;
-    setForm({ ...form, [key]: value, Title: "user" });
+    setForm((prevState: any) => ({
+      ...prevState,
+      [key]: value,
+      Title: "user",
+    }));
+  };
+
+  const handlePic = (e: any) => {
+    setIsPic(e.target.files[0]);
   };
 
   const handleCancel = () => {
@@ -104,7 +125,10 @@ function Person() {
   };
 
   const handleSave = async () => {
-    console.log(form);
+    if (isPic !== "") {
+      formdata.append("data", JSON.stringify(form));
+    }
+    dispatchStore(updateSingleUser(id, formdata));
     setIsUpdate(false);
   };
 
@@ -118,16 +142,27 @@ function Person() {
             Update User
           </Box>
           <Image
-            w={"30%"}
             m={"auto"}
-            src="https://th.bing.com/th?id=OIP.Cl56H6WgxJ8npVqyhefTdQHaHa&w=249&h=249&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2"
+            borderRadius="full"
+            src={
+              data.imageUrl
+                ? `https://2mxff3.sharepoint.com${data.imageUrl}`
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmCS3uMVc54NYJHXFUSIUFZrI3Zp00EZ6KcA&usqp=CAU"
+            }
           />
-          <Input type="file" />
+          <form
+            name="uploader"
+            action="/fileupload"
+            method="post"
+            encType="multipart/form-data"
+          >
+            <Input type="file" name="photo" onChange={handlePic} />
+          </form>
           <Text>Name :</Text>
           <Input
             variant="filled"
             placeholder="Name"
-            defaultValue={data.name}
+            value={form.name}
             onChange={handleChange}
             name="name"
             required={true}
@@ -137,19 +172,14 @@ function Person() {
             variant="filled"
             type="email"
             placeholder="Email"
-            defaultValue={data.email}
+            value={form.email}
             onChange={handleChange}
             name="email"
           />
           <Text>city :</Text>
-          <Select
-            variant="filled"
-            onChange={handleChange}
-            // defaultValue={data.city}
-            name="city"
-          >
-            <option value={data.city ? data.city : ""}>
-              {data.city ? data.city : "Selsct your city"}
+          <Select variant="filled" onChange={handleChange} name="city">
+            <option value={form.city ? form.city : ""}>
+              {form.city ? form.city : "Select your city"}
             </option>
             <option value="Thrissur">Thrissur</option>
             <option value="Kozhikode">Kozhikode</option>
@@ -159,7 +189,7 @@ function Person() {
             <option value="Palakkad">Palakkad</option>
           </Select>
           <Text>Gender :</Text>
-          <RadioGroup defaultValue={data.gender}>
+          <RadioGroup value={form.gender}>
             <Stack direction="row" onChange={handleChange}>
               <Radio name="gender" value="Male">
                 Male
@@ -174,7 +204,7 @@ function Person() {
             variant="filled"
             type="number"
             placeholder="Phone No"
-            defaultValue={data.phone}
+            value={form.phone}
             onChange={handleChange}
             name="phone"
           />
@@ -200,11 +230,7 @@ function Person() {
 
                     <ModalFooter>
                       <Button onClick={onClose}>Close</Button>
-                      <Button
-                        onClick={handleDelete}
-                        colorScheme="red"
-                        mr={3}
-                      >
+                      <Button onClick={handleDelete} colorScheme="red" mr={3}>
                         Delete
                       </Button>
                     </ModalFooter>
