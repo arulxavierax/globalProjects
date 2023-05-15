@@ -70,6 +70,7 @@ function Person() {
 
   const formdata = new FormData();
   formdata.append("photo", isPic);
+  formdata.append("data", JSON.stringify(form));
 
   useEffect(() => {
     dispatchStore(getSingleUsers(id)).then((res: any) => {
@@ -125,11 +126,7 @@ function Person() {
   };
 
   const handleSave = async () => {
-    if (isPic !== "") {
-      formdata.append("data", JSON.stringify(form));
-    }
-    dispatchStore(updateSingleUser(id, formdata));
-    setIsUpdate(false);
+    dispatchStore(updateSingleUser(id, formdata, setIsUpdate));
   };
 
   return (

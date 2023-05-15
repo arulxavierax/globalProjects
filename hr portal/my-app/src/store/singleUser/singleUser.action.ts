@@ -21,7 +21,8 @@ export const getSingleUsers = (id: any) => async (dispatch: any) => {
 };
 
 export const updateSingleUser =
-  (id: any, data: any) => async (dispatch: RootState) => {
+  (id: any, data: any, setIsUpdate: Function) =>
+  async (dispatch: RootState) => {
     try {
       let res = await axios.patch(
         `http://localhost:8080/users/update/${+id}`,
@@ -34,6 +35,7 @@ export const updateSingleUser =
       );
       console.log(res);
       dispatchStore(getSingleUsers(id));
+      setIsUpdate(false);
     } catch (error) {
       console.log(error);
     }

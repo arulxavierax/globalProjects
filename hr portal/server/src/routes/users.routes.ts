@@ -54,7 +54,8 @@ app.patch(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const photoData = fs.readFileSync((req as any).file?.path);
-    const data = req.body.data;
+    const data = JSON.parse(req.body.data);
+
     try {
       const list = sp.web.lists.getByTitle("user");
       await list.items.getById(+id).update({
@@ -64,7 +65,8 @@ app.patch(
         gender: data.gender,
         city: data.city,
       });
-      if ((req as any).file !== undefined) {
+
+      if ((req as any).file !== "") {
         let c = await sp.web
           .getFolderByServerRelativePath(`documentsLibrary/${id}`)
           .files.addUsingPath((req as any).file.originalname, photoData, {
