@@ -45,7 +45,6 @@ app.patch(
   upload.single("photo"),
   async (req: Request, res: Response) => {
     const { id } = req.params;
-    const photoData = fs.readFileSync((req as any).file?.path);
     const data = JSON.parse(req.body.data);
 
     try {
@@ -58,7 +57,8 @@ app.patch(
         city: data.city,
       });
 
-      if ((req as any).file !== "") {
+      if ((req as any).file) {
+        const photoData = fs.readFileSync((req as any).file?.path);
         let c = await sp.web
           .getFolderByServerRelativePath(`documentsLibrary/${id}`)
           .files.addUsingPath((req as any).file.originalname, photoData, {
