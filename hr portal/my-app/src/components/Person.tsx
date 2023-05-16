@@ -37,7 +37,9 @@ import {
   updateSingleUser,
 } from "../store/singleUser/singleUser.action";
 
-type User = {
+export type User = {
+  Id?: string;
+  imageUrl?: string;
   city: string;
   email: string;
   gender: string;
@@ -59,13 +61,13 @@ function Person() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
-  const [isPic, setIsPic] = useState<any>("");
+  const [isPic, setIsPic] = useState<User | any>("");
   const navigate = useNavigate();
   const { id } = useParams();
   const { data, error, loading } = useSelector(
     (store: RootState) => store.singleUser
   );
-  const [form, setForm] = useState<any>(initial);
+  const [form, setForm] = useState<User>(initial);
   const dispatchStore = store.dispatch as typeof store.dispatch | Dispatch<any>;
 
   const formdata = new FormData();
@@ -73,7 +75,7 @@ function Person() {
   formdata.append("data", JSON.stringify(form));
 
   useEffect(() => {
-    dispatchStore(getSingleUsers(id)).then((res: any) => {
+    dispatchStore(getSingleUsers(id)).then((res: User) => {
       setForm(res);
     });
   }, [id]);
@@ -97,7 +99,7 @@ function Person() {
   };
 
   const handleDelete = async () => {
-    dispatchStore(deleteUser(id)).then((res: any) => {
+    dispatchStore(deleteUser(id)).then((res: User) => {
       toast({
         title: "User Deleted",
         status: "error",
@@ -110,7 +112,7 @@ function Person() {
 
   const handleChange = (e: any) => {
     const { name: key, value } = e.target;
-    setForm((prevState: any) => ({
+    setForm((prevState: User) => ({
       ...prevState,
       [key]: value,
       Title: "user",

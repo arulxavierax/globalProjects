@@ -1,16 +1,8 @@
 import { sp } from "@pnp/sp-commonjs";
 import express, { Request, Response } from "express";
 const multer = require("multer");
+const storage = require("../multer/multer");
 const fs = require("fs");
-
-const storage = multer.diskStorage({
-  destination: (req: Request, file: any, cb: Function) => {
-    cb(null, `${__dirname}/../../uploads`);
-  },
-  filename: (req: Request, file: any, cb: Function) => {
-    cb(null, file.originalname);
-  },
-});
 
 const upload = multer({ storage: storage });
 
@@ -73,7 +65,9 @@ app.patch(
             Overwrite: true,
           });
         await list.items.getById(+id).update({
-          imageUrl: c.data.ServerRelativeUrl,
+          imageUrl: c.data.ServerRelativeUrl
+            ? c.data.ServerRelativeUrl
+            : data.imageUrl,
         });
       }
       res.send("Profile Updated");

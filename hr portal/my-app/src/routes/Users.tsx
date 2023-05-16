@@ -18,6 +18,7 @@ import { getUsers, searchUsersData } from "../store/users/users.action";
 import { RootState, store } from "../store/store";
 import { Link } from "react-router-dom";
 import "../App.css";
+import { User } from "../components/Person";
 
 function Users() {
   const { data, searchData, error, loading } = useSelector(
@@ -53,7 +54,7 @@ function Users() {
       </Container>
       <Box>
         <SimpleGrid mt={5} columns={[1, 2, 4]} spacing={5}>
-          {searchData?.map((e: any) => (
+          {searchData?.map((e: User) => (
             <Link key={e.Id} to={`/user/${e.Id}`}>
               <Card maxW="sm">
                 <CardBody>

@@ -2,15 +2,7 @@ import { sp } from "@pnp/sp-commonjs";
 import express, { Request, Response } from "express";
 const multer = require("multer");
 const fs = require("fs");
-
-const storage = multer.diskStorage({
-  destination: (req: Request, file: any, cb: Function) => {
-    cb(null, `${__dirname}/../../uploads`);
-  },
-  filename: (req: Request, file: any, cb: Function) => {
-    cb(null, file.originalname);
-  },
-});
+const storage = require("../multer/multer");
 
 const upload = multer({ storage: storage });
 
