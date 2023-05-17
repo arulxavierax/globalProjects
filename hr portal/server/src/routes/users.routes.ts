@@ -10,7 +10,7 @@ const app = express.Router();
 
 app.get("/", async (req: Request, res: Response) => {
   try {
-    const items: any[] = await sp.web.lists.getByTitle("user").items();
+    const items = await sp.web.lists.getByTitle("user").items();
     res.send(items);
   } catch (e) {
     res.send(e);

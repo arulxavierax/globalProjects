@@ -6,6 +6,7 @@ import {
 } from "./documents.types";
 import { RootState, store } from "../store";
 import { Dispatch } from "react";
+import qs from "qs";
 const dispatchStore = store.dispatch as typeof store.dispatch | Dispatch<any>;
 
 export const getDocuments = (id: any) => async (dispatch: any) => {
@@ -29,6 +30,28 @@ export const uploadDocument =
       });
       dispatchStore(getDocuments(id));
       return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const downloadDocument =
+  (serverUrl: any) => async (dispatch: RootState) => {
+    try {
+      let res = await axios.get("http://localhost:8080/doc/download", {
+        params: { serverUrl },
+        paramsSerializer: (params) => {
+          return qs.stringify(params, { encode: false });
+        },
+        responseType: "blob",
+      });
+      const blob = new Blob([res.data]);
+      const downloadLink = document.createElement("a");
+
+      downloadLink.href = window.URL.createObjectURL(blob);
+      downloadLink.setAttribute("download", serverUrl.split("/").pop() || "");
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
     } catch (error) {
       console.log(error);
     }

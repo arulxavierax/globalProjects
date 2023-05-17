@@ -16,6 +16,7 @@ import {
 import { Dispatch, useEffect, useState } from "react";
 import { RootState, store } from "../store/store";
 import {
+  downloadDocument,
   getDocuments,
   uploadDocument,
 } from "../store/documents/documents.action";
@@ -70,7 +71,9 @@ function Documents() {
     });
   };
 
-  const handleDownload = () => {};
+  const handleDownload = (e: string) => {
+    dispatchStore(downloadDocument(e));
+  };
 
   return (
     <Box>
@@ -100,8 +103,8 @@ function Documents() {
               <Tr>
                 <Td>{i + 1}</Td>
                 <Td>{e.Name}</Td>
-                <Td>{e.TimeCreated}</Td>
-                <Td onClick={() => handleDownload()}>
+                <Td>{e.TimeCreated.slice(0, 10)}</Td>
+                <Td onClick={() => handleDownload(e.ServerRelativeUrl)}>
                   <DownloadIcon />
                 </Td>
               </Tr>
