@@ -94,6 +94,10 @@ function Person() {
     );
   }
 
+  if (error) {
+    return <h1>Something Went Wrong!</h1>;
+  }
+
   const handleUpdate = () => {
     setIsUpdate(true);
   };

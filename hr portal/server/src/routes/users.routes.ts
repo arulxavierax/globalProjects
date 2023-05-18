@@ -80,9 +80,13 @@ app.patch(
 app.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    console.log("first");
     const list = sp.web.lists.getByTitle("user");
     await list.items.getById(+id).delete();
+
+    const documentLibrary = await sp.web.lists
+      .getByTitle("documentsLibrary")
+      .rootFolder.folders.getByName(id)
+      .delete();
     res.send("User Deleted Succesfully");
   } catch (e) {
     res.send(e);

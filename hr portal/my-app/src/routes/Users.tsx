@@ -12,8 +12,8 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import  { ChangeEvent, Dispatch, useEffect, useState } from "react";
-import {  useSelector } from "react-redux";
+import { ChangeEvent, Dispatch, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { getUsers, searchUsersData } from "../store/users/users.action";
 import { RootState, store } from "../store/store";
 import { Link } from "react-router-dom";
@@ -45,6 +45,10 @@ function Users() {
         />
       </Center>
     );
+  }
+
+  if (error) {
+    return <h1>Something Went Wrong!</h1>;
   }
 
   return (

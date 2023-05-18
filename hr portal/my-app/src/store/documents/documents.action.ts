@@ -36,7 +36,7 @@ export const uploadDocument =
   };
 
 export const downloadDocument =
-  (serverUrl: any) => async (dispatch: RootState) => {
+  (serverUrl: string) => async (dispatch: RootState) => {
     try {
       let res = await axios.get("http://localhost:8080/doc/download", {
         params: { serverUrl },

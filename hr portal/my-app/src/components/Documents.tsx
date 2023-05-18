@@ -29,7 +29,6 @@ function Documents() {
   const toast = useToast();
   const { id } = useParams();
   const [isDoc, setIsDoc] = useState<any>("");
-  const fileNamePath = encodeURI(isDoc.name);
   const dispatchStore = store.dispatch as typeof store.dispatch | Dispatch<any>;
   const { data, error, loading } = useSelector(
     (store: RootState) => store.documents
@@ -54,6 +53,10 @@ function Documents() {
         />
       </Center>
     );
+  }
+
+  if (error) {
+    return <h1>Something Went Wrong!</h1>;
   }
 
   const handleChange = (e: any) => {
