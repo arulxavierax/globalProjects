@@ -1,4 +1,4 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -12,9 +12,16 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import "../App.css";
-import { store } from "../store/store";
+import { RootState, store } from "../store/store";
 import { addUser } from "../store/users/users.action";
 import { useNavigate } from "react-router-dom";
+import { getCities } from "../store/cities/cities.action";
+import { useSelector } from "react-redux";
+
+interface Icity {
+  _id: string;
+  name: string;
+}
 
 const initial = {
   Title: "",
@@ -30,6 +37,14 @@ function Adduser() {
   const [form, setForm] = useState(initial);
   const dispatchStore = store.dispatch as typeof store.dispatch | Dispatch<any>;
   const navigate = useNavigate();
+
+  const { data, error, loading } = useSelector(
+    (store: RootState) => store.cities
+  );
+
+  useEffect(() => {
+    dispatchStore(getCities());
+  }, []);
 
   const handleChange = (e: any) => {
     const { name: key, value } = e.target;
@@ -76,6 +91,7 @@ function Adduser() {
         name="email"
       />
       <Text>city :</Text>
+
       <Select
         placeholder="Select City"
         variant="filled"
@@ -83,12 +99,11 @@ function Adduser() {
         value={form.city}
         name="city"
       >
-        <option value="Thrissur">Thrissur</option>
-        <option value="Kozhikode">Kozhikode</option>
-        <option value="Malappuram">Malappuram</option>
-        <option value="Ernakulam">Ernakulam</option>
-        <option value="Alappuzha">Alappuzha</option>
-        <option value="Palakkad">Palakkad</option>
+        {data?.map((e: Icity) => (
+          <option key={e._id} value={e.name}>
+            {e.name}
+          </option>
+        ))}
       </Select>
       <Text>Gender :</Text>
       <RadioGroup>

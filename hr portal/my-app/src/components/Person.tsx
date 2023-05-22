@@ -36,6 +36,8 @@ import {
   getSingleUsers,
   updateSingleUser,
 } from "../store/singleUser/singleUser.action";
+import { LayoutGroup } from "framer-motion";
+import { getCities } from "../store/cities/cities.action";
 
 export type User = {
   Id?: string;
@@ -47,6 +49,11 @@ export type User = {
   phone: string;
   Title: string;
 };
+
+interface Icity {
+  _id: string;
+  name: string;
+}
 
 const initial = {
   Title: "",
@@ -67,6 +74,7 @@ function Person() {
   const { data, error, loading } = useSelector(
     (store: RootState) => store.singleUser
   );
+  const { data: data1 } = useSelector((store: RootState) => store.cities);
   const [form, setForm] = useState<User>(initial);
   const dispatchStore = store.dispatch as typeof store.dispatch | Dispatch<any>;
 
@@ -78,6 +86,7 @@ function Person() {
     dispatchStore(getSingleUsers(id)).then((res: User) => {
       setForm(res);
     });
+    dispatchStore(getCities());
   }, [id]);
 
   if (loading) {
@@ -184,12 +193,11 @@ function Person() {
             <option value={form.city ? form.city : ""}>
               {form.city ? form.city : "Select your city"}
             </option>
-            <option value="Thrissur">Thrissur</option>
-            <option value="Kozhikode">Kozhikode</option>
-            <option value="Malappuram">Malappuram</option>
-            <option value="Ernakulam">Ernakulam</option>
-            <option value="Alappuzha">Alappuzha</option>
-            <option value="Palakkad">Palakkad</option>
+            {data1?.map((e: Icity) => (
+              <option key={e._id} value={e.name}>
+                {e.name}
+              </option>
+            ))}
           </Select>
           <Text>Gender :</Text>
           <RadioGroup value={form.gender}>

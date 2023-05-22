@@ -5,6 +5,8 @@ require("@pnp/sp-commonjs/webs");
 require("@pnp/sp-commonjs/items");
 const usersRoute = require("./routes/users.routes");
 const documentRoute = require("./routes/document.routes");
+const cityRoute = require("./routes/cities.routes");
+const dbConnect = require("./config/db");
 const cors = require("cors");
 
 const SpfxConnection = () => {
@@ -28,11 +30,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/users", usersRoute);
 app.use("/doc", documentRoute);
+app.use("/city", cityRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("<h1>Hello World!</h1>");
 });
 
-app.listen(8080, () => {
+app.listen(8080, async () => {
+  await dbConnect();
   console.log(`Listening to port ${8080}`);
 });
