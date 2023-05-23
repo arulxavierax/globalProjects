@@ -8,15 +8,16 @@ const documentRoute = require("./routes/document.routes");
 const cityRoute = require("./routes/cities.routes");
 const dbConnect = require("./config/db");
 const cors = require("cors");
+require("dotenv").config();
 
 const SpfxConnection = () => {
   sp.setup({
     sp: {
       fetchClientFactory: () =>
         new SPFetchClient(
-          "https://2mxff3.sharepoint.com/sites/arul2",
-          "44cf17cf-7bae-4072-8f8a-917c2a5b5934",
-          "lBIYmdkRU5z6Tti+b9CkPFcc+RY44LuW4lHF7EaaapQ="
+          process.env.URL as string,
+          process.env.CLIENTID as string,
+          process.env.CLIENTSECRET as string
         ),
     },
   });
